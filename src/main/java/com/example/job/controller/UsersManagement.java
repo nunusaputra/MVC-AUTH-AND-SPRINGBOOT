@@ -267,23 +267,19 @@ public class UsersManagement {
         try {
             ResetPassword resetToken = resetRepository.findByToken(token);
 
-            // Validasi token
             if (resetToken == null || resetToken.getExipireDate().before(new Date()) || resetToken.isUsed()) {
                 throw new RuntimeException("Token tidak valid atau sudah kedaluwarsa.");
             }
 
-            // Update password user
             Users user = usersRepository.findById(resetToken.getUserId())
                     .orElseThrow(() -> new RuntimeException("User tidak ditemukan"));
 
             user.setPassword(passwordEncoder.encode(pass.getPassword()));
             usersRepository.save(user);
 
-            // Tandai token sebagai digunakan
             resetToken.setUsed(true);
             resetRepository.save(resetToken);
 
-            // Kirim notifikasi email
             String body = "Halo " + user.getPerson().getFullname() + ",\n\n"
                     + "Password Anda berhasil direset.";
             emailServices.sendMail(user.getEmail(), "Password Berhasil Direset", body);
