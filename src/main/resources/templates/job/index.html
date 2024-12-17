@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Amartek Job</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="hero-title">Amartek Job Portal</h1>
+      <div class="wrapper">
+        <a th:href="@{/job/form}" class="btn">Create New</a>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Job Title</th>
+              <th>Sallary</th>
+              <th>Description</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="job : ${jobs}">
+              <td th:text="${job.id}"></td>
+              <td th:text="${job.jobTitle}"></td>
+              <td th:text="${job.sallary}"></td>
+              <td th:text="${job.description}"></td>
+              <td>
+                <a th:href="@{'/job/form/' + ${job.id}}" class="btn-edit"
+                  >EDIT</a
+                >
+                |
+                <form th:action="@{'/job/delete/' + ${job.id}}" method="post">
+                  <button class="btn-delete">Delete</button>
+                </form>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

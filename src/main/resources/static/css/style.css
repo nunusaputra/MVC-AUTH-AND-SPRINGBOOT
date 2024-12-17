@@ -1,0 +1,112 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+* {
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  list-style: none;
+  font-family: "Poppins", sans-serif;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  min-height: 100vh;
+  margin: 3rem auto;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.wrapper {
+  width: 80%;
+  align-self: center;
+}
+
+.btn,
+.btn-delete,
+.btn-edit {
+  padding: 10px 15px;
+  margin: 10px 0;
+  border-radius: 10px;
+  color: white;
+}
+
+.btn {
+  background-color: #0d68e0;
+  margin-bottom: 20px;
+}
+
+.btn-edit {
+  background-color: #cbe71b;
+}
+
+.btn-delete {
+  background-color: #a4140f;
+}
+
+.hero-title {
+  text-align: center;
+  margin-bottom: 5rem;
+  font-size: 2.3rem;
+  font-weight: 700;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  align-items: center;
+  margin-top: 20px;
+}
+
+table,
+tr,
+td,
+th {
+  border: 1px solid #ddd;
+  padding: 20px 10px;
+}
+
+table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+table tr:hover {
+  background-color: #ddd;
+}
+
+table th {
+  padding: 20px 0;
+  text-align: center;
+  background-color: #04aa6d;
+  color: white;
+}
+
+.form-style {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 90%;
+  max-width: 700px;
+  padding: 2rem;
+  background-color: #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+input,
+select {
+  width: 80%;
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 5px;
+}

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <title>Change Password</title>
+  </head>
+  <body
+    class="d-flex justify-content-center align-items-center vh-100 bg-light"
+  >
+    <!-- Card Wrapper -->
+    <div class="card shadow-lg w-50 w-md-50 w-lg-50">
+      <div class="card-body">
+        <h3 class="text-center mb-4">Change Password</h3>
+
+        <!-- Success Message -->
+        <div
+          class="alert alert-success d-flex align-items-center"
+          role="alert"
+          th:if="${successMessage}"
+        >
+          <div th:text="${successMessage}"></div>
+        </div>
+
+        <!-- Error Message -->
+        <div
+          class="alert alert-danger d-flex align-items-center"
+          role="alert"
+          th:if="${errorMessage}"
+        >
+          <div th:text="${errorMessage}"></div>
+        </div>
+
+        <!-- Change Password Form -->
+        <form
+          th:action="@{/user/change}"
+          method="post"
+          th:object="${changePass}"
+        >
+          <!-- Old Password -->
+          <div class="mb-3">
+            <label for="oldPassword" class="form-label">Old Password</label>
+            <input
+              type="password"
+              name="oldPassword"
+              id="oldPassword"
+              class="form-control"
+              placeholder="Enter old password"
+              th:field="*{oldPassword}"
+            />
+          </div>
+
+          <!-- New Password -->
+          <div class="mb-3">
+            <label for="newPassword" class="form-label">New Password</label>
+            <input
+              type="password"
+              name="newPassword"
+              id="newPassword"
+              class="form-control"
+              placeholder="Enter new password"
+              th:field="*{newPassword}"
+            />
+          </div>
+
+          <!-- Confirm Password -->
+          <div class="mb-3">
+            <label for="confPassword" class="form-label"
+              >Confirm New Password</label
+            >
+            <input
+              type="password"
+              name="confPassword"
+              id="confPassword"
+              class="form-control"
+              placeholder="Confirm new password"
+              th:field="*{confPassword}"
+            />
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn btn-primary w-100">Submit</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

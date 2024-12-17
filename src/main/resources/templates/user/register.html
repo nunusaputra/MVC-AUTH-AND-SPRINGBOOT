@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <title>Register</title>
+  </head>
+  <body
+    class="d-flex justify-content-center align-items-center vh-100 bg-light"
+  >
+    <!-- Card Wrapper -->
+    <div class="card shadow-lg w-50 w-md-50 w-lg-50">
+      <div class="card-body">
+        <h3 class="text-center mb-4">Registrasi Akun</h3>
+
+        <!-- Success Message -->
+        <div
+          class="alert alert-success d-flex align-items-center"
+          role="alert"
+          th:if="${successMessage}"
+        >
+          <div th:text="${successMessage}"></div>
+        </div>
+
+        <!-- Error Message -->
+        <div
+          class="alert alert-danger d-flex align-items-center"
+          role="alert"
+          th:if="${errorMessage}"
+        >
+          <div th:text="${errorMessage}"></div>
+        </div>
+
+        <!-- Register Form -->
+        <form
+          th:action="@{/user/registration}"
+          method="post"
+          th:object="${register}"
+        >
+          <div class="mb-3">
+            <label for="fullname" class="form-label">Full Name</label>
+            <input
+              type="text"
+              name="fullname"
+              id="fullname"
+              class="form-control"
+              placeholder="Masukkan nama anda"
+              th:field="*{fullname}"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="nickname" class="form-label">Nickname</label>
+            <input
+              type="text"
+              name="nickname"
+              id="nickname"
+              class="form-control"
+              placeholder="Masukkan nickname anda"
+              th:field="*{nickname}"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="email" class="form-label">Email Address</label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              class="form-control"
+              placeholder="Masukkan email anda"
+              th:field="*{email}"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              class="form-control"
+              placeholder="********"
+              th:field="*{password}"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="confPassword" class="form-label"
+              >Confirm Password</label
+            >
+            <input
+              type="password"
+              name="confPassword"
+              id="confPassword"
+              class="form-control"
+              placeholder="********"
+              th:field="*{confPassword}"
+            />
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn btn-primary w-100">Register</button>
+        </form>
+
+        <p class="text-md-center mt-5">
+          Sudah memiliki akun?
+          <a th:href="@{/user/login}">Login Sekarang</a>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
