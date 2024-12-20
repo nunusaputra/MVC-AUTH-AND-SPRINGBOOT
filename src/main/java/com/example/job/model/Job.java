@@ -11,6 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,13 +31,16 @@ public class Job {
     private String description;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "job_type_id", referencedColumnName = "id")
     private JobType jobtype;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "person_id", referencedColumnName = "id")
     private Person person;
 
     @OneToMany(mappedBy = "job")
+    @JsonIgnore
     private List<ApplyJob> applyjob;
 }

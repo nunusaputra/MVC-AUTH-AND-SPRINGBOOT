@@ -17,9 +17,6 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
     UserDTO getUsers(@Param(value = "email") String email);
 
     @Query("SELECT u FROM Users u WHERE u.email = :email")
-    Optional<Users> findByEmail(@Param(value = "email") String email);
-
-    @Query("SELECT u FROM Users u WHERE u.email = :email")
     Users findUser(@Param(value = "email") String email);
 
     @Query("SELECT u.password FROM Users u WHERE u.id = :id")
@@ -27,4 +24,7 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
 
     @Query("SELECT u.id FROM Users u WHERE u.email = :email")
     Integer findId(@Param(value = "email") String email);
+
+    // @Query("SELECT u FROM Users u WHERE u.email = :email")
+    Optional<Users> findByEmail(@Param(value = "email") String email);
 }

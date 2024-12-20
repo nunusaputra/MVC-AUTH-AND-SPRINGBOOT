@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 public class JobDTO {
     private Integer id;
     private String jobTitle;
-    private Integer sallary;
+    private Integer salary;
     private String description;
-    private String name;
+    private Integer personId;
+    private Integer jobTypeId;
 }

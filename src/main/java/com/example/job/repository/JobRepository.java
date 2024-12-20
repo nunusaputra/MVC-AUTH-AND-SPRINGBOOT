@@ -11,7 +11,9 @@ import com.example.job.model.Job;
 
 @Repository
 public interface JobRepository extends JpaRepository<Job, Integer> {
-    @Query("SELECT new com.example.job.dto.JobDTO(u.id, u.jobTitle, u.sallary, u.description, u.jobtype.name)" +
-            "FROM Job u JOIN u.jobtype")
-    List<JobDTO> getJob();
+    // @Query("SELECT new com.example.job.dto.JobDTO(u.id, u.jobTitle, u.sallary,
+    // u.description, u.jobtype.name, u.person.id)"
+    // +
+    // "FROM Job u JOIN u.jobtype u JOIN u.person u")
+    // List<JobDTO> getJob();
 }

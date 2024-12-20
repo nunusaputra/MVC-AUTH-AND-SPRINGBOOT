@@ -23,6 +23,6 @@ public class ResetPassword {
     private Integer id;
     private Integer userId;
     private String token;
-    private Date exipireDate;
+    private Date expiryDate;
     private boolean isUsed;
 }

@@ -28,7 +28,7 @@ public class JobController {
 
     @GetMapping
     public String index(Model model) {
-        model.addAttribute("jobs", jobRepository.getJob());
+        // model.addAttribute("jobs", jobRepository.getJob());
         return "job/index";
     }
 

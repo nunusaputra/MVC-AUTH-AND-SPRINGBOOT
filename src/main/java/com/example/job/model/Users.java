@@ -13,6 +13,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,6 +32,7 @@ public class Users {
     private String password;
 
     @OneToOne(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Person person;
 
     @ManyToOne
@@ -37,5 +40,6 @@ public class Users {
     private Role role;
 
     @OneToMany(mappedBy = "person")
+    @JsonIgnore
     private List<ApplyJob> applyjob;
 }
