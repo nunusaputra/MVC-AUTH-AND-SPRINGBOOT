@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.job.dto.JobDTO;
+import com.example.job.dto.JobStatusDTO;
 import com.example.job.model.Job;
 import com.example.job.model.JobType;
 import com.example.job.model.Person;
@@ -19,6 +20,7 @@ import com.example.job.utils.CustomResponse;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -88,7 +90,6 @@ public class JobRestController {
     public ResponseEntity<Object> putJob(@PathVariable Integer id, @RequestBody JobDTO jobPut) {
         try {
             Job job = jobRepository.findById(id).orElse(null);
-
             if (job == null) {
                 return CustomResponse.generate(HttpStatus.NOT_FOUND, "Job not found!");
             }
@@ -96,27 +97,30 @@ public class JobRestController {
             job.setJobTitle(jobPut.getJobTitle());
             job.setSallary(jobPut.getSalary());
             job.setDescription(jobPut.getDescription());
+            job.setIsActive(jobPut.getIsActive());
 
-            JobType jobtype = jobTypeRepository.findById(jobPut.getJobTypeId()).orElse(null);
-
-            if (jobtype == null) {
-                return CustomResponse.generate(HttpStatus.NOT_FOUND, "Job Type not found!");
-            }
-
-            job.setJobtype(jobtype);
-
-            Person person = personRepository.findById(jobPut.getPersonId()).orElse(null);
-
-            if (person == null) {
-                return CustomResponse.generate(HttpStatus.NOT_FOUND, "Person not found!");
-            }
-
-            job.setPerson(person);
             jobRepository.save(job);
 
             return CustomResponse.generate(HttpStatus.OK, "Job successfully updated");
         } catch (Exception e) {
             return CustomResponse.generate(HttpStatus.BAD_REQUEST, "Job failed to update!", e.getMessage());
+        }
+    }
+
+    @PatchMapping("/job/{id}")
+    public ResponseEntity<Object> patchJob(@PathVariable Integer id, @RequestBody JobStatusDTO status) {
+        try {
+            Job statusJob = jobRepository.findById(id).orElse(null);
+
+            if (statusJob == null) {
+                return CustomResponse.generate(HttpStatus.NOT_FOUND, "Job not found");
+            }
+
+            statusJob.setIsActive(status.getIsActive());
+            return CustomResponse.generate(HttpStatus.OK, "Successfully update status job",
+                    jobRepository.save(statusJob));
+        } catch (Exception e) {
+            return CustomResponse.generate(HttpStatus.BAD_REQUEST, "Failed update status job", e.getMessage());
         }
     }
 

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Amartek Job</title>
+    <title>Amartek Job Portal</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -22,7 +22,7 @@
   </head>
   <body>
     <div class="container">
-      <h1 class="hero-title text-center mb-5">Amartek Job Portal</h1>
+      <h1 class="text-center mb-5">Amartek Job Portal</h1>
       <div class="wrapper">
         <table id="table-job" class="display" width="100%">
           <thead>
@@ -30,15 +30,17 @@
               <th>No</th>
               <th>ID</th>
               <th>Job Title</th>
-              <th>Sallary</th>
+              <th>Salary</th>
               <th>Description</th>
+              <th>Status</th>
+              <th>Keterangan</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody></tbody>
         </table>
 
-        <!-- Modal -->
+        <!-- Modal for Create Job -->
         <div
           class="modal fade"
           id="exampleModal"
@@ -49,7 +51,7 @@
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Create Job</h5>
                 <button
                   type="button"
                   class="btn-close"
@@ -58,55 +60,57 @@
                 ></button>
               </div>
               <div class="modal-body">
-                <!-- Job ID -->
-                <input type="hidden" id="jobId" />
-
-                <!-- Job Title -->
-                <div class="mb-2">
-                  <label for="jobTitle" class="form-label">Job Title</label>
-                  <div class="">
+                <form id="jobForm">
+                  <!-- Job Title -->
+                  <div class="mb-3">
+                    <label for="jobTitle" class="form-label">Job Title</label>
                     <input
                       type="text"
                       name="jobTitle"
                       id="jobTitle"
-                      placeholder="UI/UX Developer"
                       class="form-control"
+                      placeholder="UI/UX Developer"
+                      required
                     />
                   </div>
-                </div>
 
-                <!-- Job Type -->
-                <div class="mb-2">
-                  <label for="jobtype" class="form-label">Job Type</label>
-                  <div>
-                    <select name="jobtype" id="jobtype" class="form-control">
+                  <!-- Job Type -->
+                  <div class="mb-3">
+                    <label for="jobtype" class="form-label">Job Type</label>
+                    <select
+                      name="jobtype"
+                      id="jobtype"
+                      class="form-control"
+                      required
+                    >
                       <option value="">Select Job Type</option>
-                      <option value="">Fulltime</option>
-                      <option value="">Parttime</option>
-                      <option value="">Internship</option>
+                      <option value="1">Fulltime</option>
+                      <option value="2">Parttime</option>
+                      <option value="3">Internship</option>
                     </select>
                   </div>
-                </div>
 
-                <!-- Sallary -->
-                <div class="mb-2">
-                  <label for="salary" class="form-label">Salary</label>
-                  <div>
+                  <!-- Salary -->
+                  <div class="mb-3">
+                    <label for="salary" class="form-label">Salary</label>
                     <input
                       type="number"
                       name="salary"
                       id="salary"
-                      placeholder="0"
                       class="form-control"
+                      placeholder="0"
+                      required
                     />
                   </div>
-                </div>
 
-                <!-- Description -->
-                <div class="mb-2">
-                  <label for="desc" class="form-label">Description</label>
-                  <div id="summernote"></div>
-                </div>
+                  <!-- Description -->
+                  <div class="mb-3">
+                    <label for="description" class="form-label"
+                      >Description</label
+                    >
+                    <div id="summernote"></div>
+                  </div>
+                </form>
               </div>
               <div class="modal-footer">
                 <button
@@ -116,8 +120,12 @@
                 >
                   Close
                 </button>
-                <button type="button" class="btn btn-primary">
-                  Save changes
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  onclick="saveJob()"
+                >
+                  Save
                 </button>
               </div>
             </div>
@@ -149,94 +157,144 @@
     charset="utf8"
     src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"
   ></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <script>
-    // Summernote
+    // Initialize Summernote
     $(document).ready(function () {
       $("#summernote").summernote();
     });
 
-    // Create Features
+    // Open Create Modal
     function createJob() {
-      $("#jobTitle").val("");
-      $("#jobtype").val("");
-      $("#salary").val("");
-      $("#summernote").val("");
-
+      $("#jobForm")[0].reset();
+      $("#summernote").summernote("code", "");
       $("#exampleModal").modal("show");
     }
 
-    // // Edit Features
-    function editJob(id) {
+    // Save Job
+    function saveJob() {
+      const jobTitle = $("#jobTitle").val();
+      const jobtype = $("#jobtype").val();
+      const salary = $("#salary").val();
+      const description = $("#summernote").summernote("code");
+
+      if (!jobTitle || !jobtype || !salary || !description) {
+        Swal.fire("Error", "Please fill in all fields", "error");
+        return;
+      }
+
+      const data = {
+        jobTitle: jobTitle,
+        jobTypeId: parseInt(jobtype),
+        salary: parseFloat(salary),
+        personId: 1,
+        description: description,
+      };
+
       $.ajax({
-        url: `http://localhost:8080/api/job/${id}`,
-        type: "GET",
-        success: function (data) {
-          $("#jobId").val(data.id);
-          $("#jobTitle").val(data.jobTitle);
-          $("#jobtype").val(data.job_type_id);
-          $("#salary").val(data.sallary);
-          $("#summernote").val(data.description);
-          $("#exampleModal").modal("show");
+        url: "http://localhost:8080/api/job",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: function (response) {
+          Swal.fire("Success", "Job berhasil disimpan!", "success");
+          $("#exampleModal").modal("hide");
+          $("#table-job").DataTable().ajax.reload();
         },
-        error: function (xhr, status, error) {
-          alert("Error fetching data: " + error);
+        error: function (xhr) {
+          Swal.fire(
+            "Error",
+            xhr.responseJSON?.message || "Gagal menyimpan data!",
+            "error"
+          );
         },
       });
     }
 
-    // // Save
-    function saveJob() {
-      let jobTitle = $("#jobTitle").val();
-      let jobtype = $("#jobtype").val();
-      let salary = $("#salary").val();
-      let desc = $("#summernote").val();
+    // Edit
+    function updateJob(id) {
+      const jobTitle = $("#jobTitle").val();
+      const jobtype = $("#jobtype").val();
+      const salary = $("#salary").val();
+      const description = $("#summernote").summernote("code");
+      const isActive = $("#isActive").prop("checked");
 
-      let isEdit = $("#jobId").val();
-      let url = isEdit
-        ? `http://localhost:8080/api/job/${isEdit}`
-        : `http://localhost:8080/api/job`;
-      let method = isEdit ? "PUT" : "POST";
+      if (!jobTitle || !jobtype || !salary || !description) {
+        Swal.fire("Error", "Please fill in all fields", "error");
+        return;
+      }
+
+      const data = {
+        jobTitle: jobTitle,
+        jobTypeId: parseInt(jobtype),
+        salary: parseFloat(salary),
+        personId: 1,
+        description: description,
+        isActive: isActive,
+      };
 
       $.ajax({
-        url: url,
-        type: method,
+        url: `http://localhost:8080/api/job/${id}`,
+        type: "PUT",
         contentType: "application/json",
-        data: JSON.stringify({
-          job_title: jobTitle,
-          job_type_id: jobtype,
-          sallary: salary,
-          description: desc,
-        }),
+        data: JSON.stringify(data),
         success: function (response) {
-          alert("Data berhasil disimpan!");
+          Swal.fire("Success", "Job berhasil diperbarui!", "success");
           $("#exampleModal").modal("hide");
           $("#table-job").DataTable().ajax.reload();
         },
-        error: function (xhr, status, error) {
-          alert("Data gagal disimpan!" + error);
+        error: function (xhr) {
+          Swal.fire(
+            "Error",
+            xhr.responseJSON?.message || "Gagal memperbarui data!",
+            "error"
+          );
         },
       });
     }
 
     // delete
     function deleteJob(id) {
-      if (confirm("Are you sure to delete this job?")) {
-        $.ajax({
-          url: `http://localhost:8080/api/job/${id}`,
-          type: "DELETE",
-          success: function (data) {
-            $("#table-job").DataTable().ajax.reload();
-          },
-          error: function (xhr, status, error) {
-            alert("Error fetching data: " + error);
-          },
-        });
-      } else {
-        return;
-      }
+      Swal.fire({
+        title: "Are you sure to delete this job?",
+        text: "you can't see this job anymore after deleting it",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $.ajax({
+            url: `http://localhost:8080/api/job/${id}`,
+            type: "DELETE",
+            success: function (data) {
+              Swal.fire({
+                title: "Job Deleted",
+                text: "The job has been successfully deleted.",
+                icon: "success",
+                confirmButtonText: "OK",
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  $("#table-job").DataTable().ajax.reload();
+                }
+              });
+            },
+            error: function (xhr, status, error) {
+              Swal.fire({
+                title: "Delete Failed",
+                text: "Unable to delete the job. Please try again.",
+                icon: "error",
+                confirmButtonText: "OK",
+              });
+            },
+          });
+        }
+      });
     }
 
+    // Initialize DataTable
     $("#table-job").DataTable({
       processing: true,
       serverSide: true,
@@ -267,19 +325,65 @@
         { data: "sallary" },
         { data: "description" },
         {
-          data: "id",
+          data: "isActive",
           render: function (data, type, row) {
             return `
-             <button class="btn btn-primary btn-sm" onclick="editJob(${row.id})">Edit</button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteJob(${row.id})">Delete</button>
-            `;
+      <label class="switch">
+        <input 
+          type="checkbox" 
+          class="isActiveSwitch" 
+          data-id="${row.id}" 
+          ${data ? "checked" : ""}>
+        <span class="slider round"></span>
+      </label>
+    `;
+          },
+        },
+        {
+          data: "isActive",
+          render: function (data, type, row) {
+            return data === true ? "Aktif" : "Tidak aktif";
+          },
+        },
+        {
+          data: "id",
+          render: function (data) {
+            return `
+            <button class="btn btn-primary btn-sm" onclick="editJob(${data})">Edit</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteJob(${data})">Delete</button>
+          `;
           },
         },
       ],
       columnDefs: [
-        { orderable: false, targets: 3 },
+        { orderable: false, targets: [3, 4] },
         { visible: false, targets: 1 },
       ],
+    });
+
+    $(document).on("change", ".isActiveSwitch", function () {
+      const jobId = $(this).data("id");
+      const isActive = $(this).is(":checked");
+
+      const data = { isActive: isActive };
+
+      $.ajax({
+        url: `http://localhost:8080/api/job/${jobId}`,
+        type: "PATCH",
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: function (response) {
+          Swal.fire("Success", "Job status updated successfully!", "success");
+          $("#table-job").DataTable().ajax.reload();
+        },
+        error: function (xhr) {
+          Swal.fire(
+            "Error",
+            xhr.responseJSON?.message || "Failed to update job status!",
+            "error"
+          );
+        },
+      });
     });
   </script>
 </html>

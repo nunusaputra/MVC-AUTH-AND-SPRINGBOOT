@@ -29,6 +29,7 @@ public class Job {
     private String jobTitle;
     private Integer sallary;
     private String description;
+    private Boolean isActive;
 
     @ManyToOne
     @JsonIgnore
