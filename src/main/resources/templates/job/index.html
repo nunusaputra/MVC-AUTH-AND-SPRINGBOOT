@@ -27,6 +27,7 @@
         <table id="table-job" class="display" width="100%">
           <thead>
             <tr>
+              <th>No</th>
               <th>ID</th>
               <th>Job Title</th>
               <th>Sallary</th>
@@ -255,6 +256,12 @@
         },
       ],
       columns: [
+        {
+          data: null,
+          render: function (data, type, row, meta) {
+            return meta.row + 1;
+          },
+        },
         { data: "id" },
         { data: "jobTitle" },
         { data: "sallary" },
@@ -269,7 +276,10 @@
           },
         },
       ],
-      columnDefs: [{ orderable: false, targets: -1 }],
+      columnDefs: [
+        { orderable: false, targets: 3 },
+        { visible: false, targets: 1 },
+      ],
     });
   </script>
 </html>
