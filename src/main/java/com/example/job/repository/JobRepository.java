@@ -16,4 +16,9 @@ public interface JobRepository extends JpaRepository<Job, Integer> {
     // +
     // "FROM Job u JOIN u.jobtype u JOIN u.person u")
     // List<JobDTO> getJob();
+
+    @Query("SELECT new com.example.job.dto.JobDTO(u.id, u.jobTitle, u.sallary, u.description, u.isActive, p.id, p.fullname, jt.id, jt.name, a.path) "
+            + "FROM Job u JOIN u.person p JOIN u.jobtype jt JOIN u.assets a")
+    List<JobDTO> getAllJob();
+
 }

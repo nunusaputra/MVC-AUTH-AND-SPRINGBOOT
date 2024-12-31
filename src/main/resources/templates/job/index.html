@@ -28,13 +28,15 @@
           <thead>
             <tr>
               <th>No</th>
-              <th>ID</th>
+              <th>Applicant Name</th>
+              <th>IPK</th>
+              <th>Universitas</th>
+              <th>Fakultas</th>
+              <th>Nama Perusahaan</th>
               <th>Job Title</th>
-              <th>Salary</th>
-              <th>Description</th>
+              <th>Sallary</th>
+              <th>Job Type</th>
               <th>Status</th>
-              <th>Keterangan</th>
-              <th>Action</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -169,11 +171,14 @@
     function createJob() {
       $("#jobForm")[0].reset();
       $("#summernote").summernote("code", "");
+      $("#jobForm").removeData("job-id");
+      $("#jobForm").attr("data-job-id", null);
       $("#exampleModal").modal("show");
     }
 
     // Save Job
     function saveJob() {
+      const jobId = $("#jobForm").data("job-id");
       const jobTitle = $("#jobTitle").val();
       const jobtype = $("#jobtype").val();
       const salary = $("#salary").val();
@@ -192,9 +197,14 @@
         description: description,
       };
 
+      const url = jobId
+        ? `http://localhost:8080/api/job/${jobId}`
+        : "http://localhost:8080/api/job";
+      const method = jobId ? "PUT" : "POST";
+
       $.ajax({
-        url: "http://localhost:8080/api/job",
-        type: "POST",
+        url: url,
+        type: method,
         contentType: "application/json",
         data: JSON.stringify(data),
         success: function (response) {
@@ -213,43 +223,26 @@
     }
 
     // Edit
-    function updateJob(id) {
-      const jobTitle = $("#jobTitle").val();
-      const jobtype = $("#jobtype").val();
-      const salary = $("#salary").val();
-      const description = $("#summernote").summernote("code");
-      const isActive = $("#isActive").prop("checked");
-
-      if (!jobTitle || !jobtype || !salary || !description) {
-        Swal.fire("Error", "Please fill in all fields", "error");
-        return;
-      }
-
-      const data = {
-        jobTitle: jobTitle,
-        jobTypeId: parseInt(jobtype),
-        salary: parseFloat(salary),
-        personId: 1,
-        description: description,
-        isActive: isActive,
-      };
-
+    function editJob(id) {
       $.ajax({
         url: `http://localhost:8080/api/job/${id}`,
-        type: "PUT",
-        contentType: "application/json",
-        data: JSON.stringify(data),
+        type: "GET",
         success: function (response) {
-          Swal.fire("Success", "Job berhasil diperbarui!", "success");
-          $("#exampleModal").modal("hide");
-          $("#table-job").DataTable().ajax.reload();
+          const data = response.data;
+          console.log(data);
+          // const jobType = 1;
+
+          $("#jobTitle").val(data.jobTitle);
+          $("#jobtype").val(data.jobtype.id);
+          $("#salary").val(data.sallary);
+          $("#summernote").summernote("code", data.description);
+
+          $("#jobForm").data("job-id", data.id);
+
+          $("#exampleModal").modal("show");
         },
-        error: function (xhr) {
-          Swal.fire(
-            "Error",
-            xhr.responseJSON?.message || "Gagal memperbarui data!",
-            "error"
-          );
+        error: function (xhr, status, error) {
+          alert("Error fetching data: " + error);
         },
       });
     }
@@ -296,11 +289,15 @@
 
     // Initialize DataTable
     $("#table-job").DataTable({
+      searching: true,
       processing: true,
       serverSide: true,
       ajax: {
-        url: "http://localhost:8080/api/job",
+        url: "http://localhost:8080/api/applicant",
         type: "GET",
+        data: function (d) {
+          d.search = d.search.value;
+        },
         dataSrc: "data",
       },
       dom: '<"top"Bf>rt<"bottom"ilp><"clear">',
@@ -320,44 +317,19 @@
             return meta.row + 1;
           },
         },
-        { data: "id" },
-        { data: "jobTitle" },
-        { data: "sallary" },
-        { data: "description" },
-        {
-          data: "isActive",
-          render: function (data, type, row) {
-            return `
-      <label class="switch">
-        <input 
-          type="checkbox" 
-          class="isActiveSwitch" 
-          data-id="${row.id}" 
-          ${data ? "checked" : ""}>
-        <span class="slider round"></span>
-      </label>
-    `;
-          },
-        },
-        {
-          data: "isActive",
-          render: function (data, type, row) {
-            return data === true ? "Aktif" : "Tidak aktif";
-          },
-        },
-        {
-          data: "id",
-          render: function (data) {
-            return `
-            <button class="btn btn-primary btn-sm" onclick="editJob(${data})">Edit</button>
-            <button class="btn btn-danger btn-sm" onclick="deleteJob(${data})">Delete</button>
-          `;
-          },
-        },
+        { data: 0, title: "Applicant Name" },
+        { data: 1, title: "GPA" },
+        { data: 2, title: "University" },
+        { data: 3, title: "Faculty" },
+        { data: 4, title: "Company Name" },
+        { data: 5, title: "Job Title" },
+        { data: 6, title: "Salary" },
+        { data: 7, title: "Job Type" },
+        { data: 8, title: "Status" },
       ],
       columnDefs: [
         { orderable: false, targets: [3, 4] },
-        { visible: false, targets: 1 },
+        // { visible: false, targets: 1 },
       ],
     });
 
